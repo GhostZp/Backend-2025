@@ -11,7 +11,21 @@
 
 First of all I copied the teachers example from his github repositorio. 
 <br/>
-Then I added PUT item and DELETE item resources/endpoints. 
+The get server root code wasn't working so I fixed it.
+![alt text](https://github.com/GhostZp/Backend-2025/blob/node-start/ss/1.png?raw=true)
 <br/>
-My one issues was a missing closing bracket. 
+Then I added PUT item.
+![alt text](https://github.com/GhostZp/Backend-2025/blob/node-start/ss/2.png?raw=true)
+<br/>
+Check that it worked.
+![alt text](https://github.com/GhostZp/Backend-2025/blob/node-start/ss/3.png?raw=true)
+<br/>
+Then DELETE item. 
+![alt text](https://github.com/GhostZp/Backend-2025/blob/node-start/ss/4.png?raw=true)
+<br/>
+Check that it worked.
+![alt text](https://github.com/GhostZp/Backend-2025/blob/node-start/ss/5.png?raw=true)
+<br/>
+My one issue I encountered was a missing closing bracket after PUT item. 
 ```});```
+

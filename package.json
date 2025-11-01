@@ -8,7 +8,7 @@
   "main": "srx/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/index.js", 
+    "start": "node src/index.js",
     "dev": "nodemon src/index.js"
   },
   "devDependencies": {
@@ -18,5 +18,9 @@
     "globals": "^16.4.0",
     "nodemon": "^3.1.10",
     "prettier": "3.6.2"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "pug": "^3.0.3"
   }
 }

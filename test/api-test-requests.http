@@ -1,0 +1,76 @@
+# UCAD example API test http request
+
+### GET server root
+GET http://localhost:3000/
+
+
+## /media resource
+
+### GET /media
+GET http://localhost:3000/api/media
+
+### GET media item by id
+GET http://localhost:3000/api/media/9590
+
+### Add new media item
+POST http://localhost:3000/api/media
+content-type: application/json
+
+{
+  "filename": "jokukuva.jpg",
+  "title": "New image",
+  "description": "The description of the new image",
+  "user_id": 305,
+  "media_type": "image/jpeg"
+}
+
+### Update existing media item
+PUT http://localhost:3000/api/media/9590
+content-type: application/json
+
+{
+  "title": "Basement modified",
+  "description": "Some new description"
+}
+
+### Delete existing media item
+DELETE http://localhost:3000/api/media/959
+
+
+
+######################
+
+
+
+## /users resource
+
+### GET /users
+GET http://localhost:3000/api/users
+
+### GET user by id
+GET http://localhost:3000/api/users/30
+
+### Add new user
+POST http://localhost:3000/api/users
+content-type: application/json
+
+{
+  "user_id": 3612,
+  "username": "Nonna666",
+  "password": "********",
+  "email": "Nonna666@example.com",
+  "user_level_id": 3,
+  "created_at": "2020-09-12T06:56:41.000Z"
+}
+
+### Update existing user
+PUT http://localhost:3000/api/users/3609
+content-type: application/json
+
+{
+  "username": "ErkkiKarjala",
+  "email": "ErkkiKarjala@example.com"
+}
+
+### Delete existing user
+DELETE http://localhost:3000/api/users/30

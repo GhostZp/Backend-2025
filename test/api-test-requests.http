@@ -1,5 +1,7 @@
 # UCAD example API test http request
 
+### Note: Install VSCode REST Client extension to use this file
+
 ### GET server root
 GET http://localhost:3000/
 
@@ -10,31 +12,38 @@ GET http://localhost:3000/
 GET http://localhost:3000/api/media
 
 ### GET media item by id
-GET http://localhost:3000/api/media/9590
+GET http://localhost:3000/api/media/6
 
-### Add new media item
+### Add new media item including media file
 POST http://localhost:3000/api/media
-content-type: application/json
+Content-Type: multipart/form-data; boundary=----Boundary
 
-{
-  "filename": "jokukuva.jpg",
-  "title": "New image",
-  "description": "The description of the new image",
-  "user_id": 305,
-  "media_type": "image/jpeg"
-}
+------Boundary
+Content-Disposition: form-data; name="title"
+
+New cat image
+------Boundary
+Content-Disposition: form-data; name="user_id"
+
+2
+------Boundary
+Content-Disposition: form-data; name="file"; filename="image.png"
+Content-Type: image/png
+
+< ./test-cat.png
+------Boundary--
 
 ### Update existing media item
-PUT http://localhost:3000/api/media/9590
+PUT http://localhost:3000/api/media/4
 content-type: application/json
 
 {
-  "title": "Basement modified",
-  "description": "Some new description"
+  "title": "New title",
+  "description": "Updated desc"
 }
 
 ### Delete existing media item
-DELETE http://localhost:3000/api/media/959
+DELETE http://localhost:3000/api/media/5
 
 
 
@@ -48,29 +57,49 @@ DELETE http://localhost:3000/api/media/959
 GET http://localhost:3000/api/users
 
 ### GET user by id
-GET http://localhost:3000/api/users/30
+GET http://localhost:3000/api/users/3
 
 ### Add new user
 POST http://localhost:3000/api/users
 content-type: application/json
 
 {
-  "user_id": 3612,
-  "username": "Nonna666",
-  "password": "********",
-  "email": "Nonna666@example.com",
-  "user_level_id": 3,
-  "created_at": "2020-09-12T06:56:41.000Z"
+  "username": "testimies",
+  "password": "miesmies",
+  "email": "olen.mies@mailmail.com"
 }
 
 ### Update existing user
-PUT http://localhost:3000/api/users/3609
+PUT http://localhost:3000/api/users/2
 content-type: application/json
 
 {
-  "username": "ErkkiKarjala",
-  "email": "ErkkiKarjala@example.com"
+  "username": "testinainen",
+  "password": "nainennainen",
+  "email": "olen.nainen@mailmail.com"
 }
 
 ### Delete existing user
-DELETE http://localhost:3000/api/users/30
+DELETE http://localhost:3000/api/users/5
+
+
+######################
+
+
+### GET /likes
+GET http://localhost:3000/api/likes
+
+### GET user by id
+GET http://localhost:3000/api/likes/2
+
+### Add new user
+POST http://localhost:3000/api/likes
+content-type: application/json
+
+{
+  "media_id": 1,
+  "user_id": 4
+}
+
+### Delete existing user
+DELETE http://localhost:3000/api/likes/3

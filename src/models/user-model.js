@@ -71,4 +71,36 @@ const deleteUserById = async (id) => {
   }
 };
 
-export {selectAllUsers, selectUserById, insertUser, updateUser, deleteUserById};
+// For the login
+
+const selectUserByUsername = async (username) => {
+  try {
+    const [rows] = await promisePool.query(
+      'SELECT user_id, username, password, email, user_level_id, created_at FROM Users WHERE username=?',
+      [username],
+    );
+    console.log(rows);
+    // return only first item of the result array
+    return rows[0];
+  } catch (error) {
+    console.error(error);
+    throw new Error('database error');
+  }
+};
+
+const selectUserByNameAndPassword = async (username, password) => {
+  try {
+    const [rows] = await promisePool.query(
+      'SELECT user_id, username, email, user_level_id, created_at FROM Users WHERE username=? AND password=?',
+      [username, password],
+    );
+    console.log(rows);
+    // return only first item of the result array
+    return rows[0];
+  } catch (error) {
+    console.error(error);
+    throw new Error('database error');
+  }
+};
+
+export {selectAllUsers, selectUserById, insertUser, updateUser, deleteUserById, selectUserByUsername, selectUserByNameAndPassword};

@@ -1,5 +1,9 @@
 # UCAD example API test http request
 
+### Variables
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo1LCJ1c2VybmFtZSI6Im1hdHRpIiwiZW1haWwiOiJtYXR0aUBleGFtcGxlLmNvbSIsInVzZXJfbGV2ZWxfaWQiOjEsImNyZWF0ZWRfYXQiOiIyMDI1LTExLTE3VDEyOjE1OjA3LjAwMFoiLCJpYXQiOjE3NjMzODQ0NjEsImV4cCI6MTc2MzQ3MDg2MX0.Vt3N-fryyzAvUo3cOlbXAWNvfoim9d6-GHQe767a03g
+
+
 ### Note: Install VSCode REST Client extension to use this file
 
 ### GET server root
@@ -10,12 +14,15 @@ GET http://localhost:3000/
 
 ### GET /media
 GET http://localhost:3000/api/media
+Authorization: Bearer {{token}}
 
-### GET media item by id
-GET http://localhost:3000/api/media/6
+### GET media items by user (logged in)
+GET http://localhost:3000/api/media/user
+Authorization: Bearer {{token}}
 
 ### Add new media item including media file
 POST http://localhost:3000/api/media
+Authorization: Bearer {{token}}
 Content-Type: multipart/form-data; boundary=----Boundary
 
 ------Boundary
@@ -35,6 +42,7 @@ Content-Type: image/png
 
 ### Update existing media item
 PUT http://localhost:3000/api/media/4
+Authorization: Bearer {{token}}
 content-type: application/json
 
 {
@@ -43,7 +51,8 @@ content-type: application/json
 }
 
 ### Delete existing media item
-DELETE http://localhost:3000/api/media/5
+DELETE http://localhost:3000/api/media/2
+Authorization: Bearer {{token}}
 
 
 
@@ -55,9 +64,11 @@ DELETE http://localhost:3000/api/media/5
 
 ### GET /users
 GET http://localhost:3000/api/users
+Authorization: Bearer {{token}}
 
 ### GET user by id
-GET http://localhost:3000/api/users/3
+GET http://localhost:3000/api/users/6
+Authorization: Bearer {{token}}
 
 ### Add new user
 POST http://localhost:3000/api/users
@@ -69,8 +80,22 @@ content-type: application/json
   "email": "olen.mies@mailmail.com"
 }
 
+### Login
+POST http://localhost:3000/api/auth/login
+content-type: application/json
+
+{
+  "username": "JohnDoe",
+  "password": "to-be-hashed-pw1"
+}
+
+### Auth GET me
+GET http://localhost:3000/api/auth/me
+Authorization: Bearer {{token}}
+
 ### Update existing user
 PUT http://localhost:3000/api/users/2
+Authorization: Bearer {{token}}
 content-type: application/json
 
 {
@@ -81,6 +106,7 @@ content-type: application/json
 
 ### Delete existing user
 DELETE http://localhost:3000/api/users/5
+Authorization: Bearer {{token}}
 
 
 ######################
@@ -89,10 +115,10 @@ DELETE http://localhost:3000/api/users/5
 ### GET /likes
 GET http://localhost:3000/api/likes
 
-### GET user by id
+### GET likes user by id
 GET http://localhost:3000/api/likes/2
 
-### Add new user
+### Add new like
 POST http://localhost:3000/api/likes
 content-type: application/json
 
@@ -101,5 +127,5 @@ content-type: application/json
   "user_id": 4
 }
 
-### Delete existing user
+### Delete existing like
 DELETE http://localhost:3000/api/likes/3

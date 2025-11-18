@@ -3,6 +3,7 @@ import express from 'express';
 import 'dotenv/config';
 import mediaRouter from './routes/media-router.js';
 import userRouter from './routes/user-router.js';
+import authRouter from './routes/auth-router.js';
 import likesRouter from './routes/likes-router.js';
 
 const hostname = process.env.HOSTNAME;
@@ -23,6 +24,9 @@ app.use('/api/media', mediaRouter);
 
 // Users endpoints
 app.use('/api/users', userRouter);
+
+// Authentication endpoints
+app.use('/api/auth', authRouter);
 
 // likes endpoints
 app.use('/api/likes', likesRouter);

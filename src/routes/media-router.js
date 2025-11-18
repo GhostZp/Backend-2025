@@ -7,6 +7,7 @@ import {
   postMedia,
   putMedia
 } from '../controllers/media-controller.js';
+import {authenticateToken} from '../middlewares/authentication.js';
 
 // All media endpoints handled with express router
 const mediaRouter = express.Router();
@@ -15,18 +16,18 @@ const upload = multer({dest: process.env.UPLOADS_PATH});
 
 mediaRouter
   .route('/')
-  // Get all media items
-  .get(getMedia)
+  // only logged in user can fetch the media list
+  .get(authenticateToken, getMedia)
   // post new media item
-  .post(upload.single('file'), postMedia);
+  .post(authenticateToken, upload.single('file'), postMedia);
 
 mediaRouter
   .route('/:id')
   // get media by id
-  .get(getMediaById)
+  .get(authenticateToken, getMediaById)
   // update an existing media item by id
-  .put(putMedia) 
+  .put(authenticateToken, putMedia) 
   // delete media
-  .delete(deleteMedia);
+  .delete(authenticateToken, deleteMedia);
 
 export default mediaRouter;

@@ -5,6 +5,7 @@ import mediaRouter from './routes/media-router.js';
 import userRouter from './routes/user-router.js';
 import authRouter from './routes/auth-router.js';
 import likesRouter from './routes/likes-router.js';
+import { errorHandler, notFoundHandler } from './middlewares/error-handler.js';
 
 const hostname = process.env.HOSTNAME;
 const port = process.env.PORT;
@@ -30,6 +31,11 @@ app.use('/api/auth', authRouter);
 
 // likes endpoints
 app.use('/api/likes', likesRouter);
+
+// not found route
+app.use(notFoundHandler);
+//Error handler
+app.use(errorHandler);
 
 // Start the server
 app.listen(port, () => {

@@ -1,70 +1,123 @@
-import {addMedia, findMediaById, listAllMedia, updateMedia, deleteMediaById} from '../models/media-model.js';
+import {validationResult} from 'express-validator';
+import {
+  addMedia,
+  findMediaById,
+  listAllMedia,
+  updateMedia,
+  deleteMediaById,
+} from '../models/media-model.js';
 
-const getMedia = async (req, res) => {
-  res.json(await listAllMedia());
+const getMedia = async (req, res, next) => {
+  try {
+    const media = await listAllMedia();
+    res.json(media);
+  } catch (err) {
+    next(err);
+  }
 };
 
-const getMediaById = async (req, res) => {
-  const media = await findMediaById(req.params.id);
-  if (media) {
-    // add full filepath url to media object
+const getMediaById = async (req, res, next) => {
+  try {
+    const media = await findMediaById(req.params.id);
+
+    if (!media) {
+      const error = new Error('Media item not found');
+      error.status = 404;
+      return next(error);
+    }
+
     media.filepath = `${req.protocol}://${req.headers.host}/${process.env.UPLOADS_PATH}/${media.filename}`;
     res.json(media);
-  } else {
-    res.sendStatus(404);
+  } catch (err) {
+    next(err);
   }
 };
 
-const postMedia = async (req, res) => {
-  let {title, description, user_id} = req.body;
-  // replace description with empty string if undefined
-  description = description ? description : '';
-  console.log('req file by multer', req.file);
-  const {filename, size, mimetype} = req.file;
-  if (filename && title && user_id) {
-    const result = await addMedia({
-      user_id,
-      filename,
-      size,
-      mimetype,
-      title,
-      description,
+const postMedia = async (req, res, next) => {
+  try {
+    // multer file missing
+    if (!req.file) {
+      const error = new Error('Invalid or missing file');
+      error.status = 400;
+      return next(error);
+    }
+
+    // validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const msgs = errors
+        .array()
+        .map((e) => `${e.path}: ${e.msg}`)
+        .join(', ');
+      const error = new Error(msgs);
+      error.status = 400;
+      return next(error);
+    }
+
+    const {title, description} = req.body;
+    const {filename, mimetype, size} = req.file;
+    const user_id = req.user.user_id;
+
+    const newMedia = {title, description, user_id, filename, mimetype, size};
+    const result = await addMedia(newMedia);
+
+    if (result.error) {
+      const error = new Error(result.error);
+      error.status = 500;
+      return next(error);
+    }
+
+    res.status(201).json({
+      message: 'New media item added.',
+      ...result,
     });
-    res.status(201);
-    res.json({message: 'New media item added.', ...result});
-  } else {
-    res.sendStatus(400);
+  } catch (err) {
+    next(err);
   }
 };
 
-const putMedia = async (req, res) => {
-  const mediaId = parseInt(req.params.id);
+const putMedia = async (req, res, next) => {
+  try {
+    const mediaId = parseInt(req.params.id);
+    const existing = await findMediaById(mediaId);
 
-  const existing = await findMediaById(mediaId);
-  if (!existing) return res.sendStatus(404);
+    if (!existing) {
+      const error = new Error('Media item not found');
+      error.status = 404;
+      return next(error);
+    }
 
-  const { title, description } = req.body;
-  if (!title && !description) {
-    return res.status(400).json({ error: "title or description required" });
+    const {title, description} = req.body;
+
+    if (!title && !description) {
+      const error = new Error('title or description required');
+      error.status = 400;
+      return next(error);
+    }
+
+    const updated = await updateMedia(mediaId, {title, description});
+    res.json({updated_media: updated});
+  } catch (err) {
+    next(err);
   }
-
-  const updated = await updateMedia(mediaId, { title, description });
-
-  return res.json({ updated_media: updated });
 };
 
+const deleteMedia = async (req, res, next) => {
+  try {
+    const mediaId = parseInt(req.params.id);
+    const existing = await findMediaById(mediaId);
 
-const deleteMedia = async (req, res) => {
-  const mediaId = parseInt(req.params.id);
-  const existing = await findMediaById(mediaId);
+    if (!existing) {
+      const error = new Error('media item not found');
+      error.status = 404;
+      return next(error);
+    }
 
-  if (!existing) {
-    return res.status(404).json({ message: 'media item not found' });
+    await deleteMediaById(mediaId);
+    res.json({message: 'item deleted'});
+  } catch (err) {
+    next(err);
   }
-
-  await deleteMediaById(mediaId);
-
-  return res.json({ message: 'item deleted' });
 };
 
 export {getMedia, getMediaById, postMedia, putMedia, deleteMedia};

@@ -25,17 +25,19 @@ const selectUserById = async (userId) => {
 };
 
 const insertUser = async (user) => {
+  const {username, password, email, user_level_id} = user;
+  const sql = `INSERT INTO Users (username, password, email, user_level_id)
+               VALUES (?, ?, ?, ?)`;
+  const params = [username, password, email, user_level_id];
   try {
-    const [result] = await promisePool.query(
-      'INSERT INTO Users (username, password, email) VALUES (?, ?, ?)',
-      [user.username, user.password, user.email],
-    );
-    console.log('insertUser', result);
-    // return only first item of the result array
-    return result.insertId;
-  } catch (error) {
-    console.error(error);
-    throw new Error('database error');
+    const [result] = await promisePool.execute(sql, params);
+    //console.log('rows', rows);
+    return {user_id: result.insertId};
+  } catch (e) {
+    console.error('error', e.message);
+    return {error: e.message};
+    // optionally
+    //throw new Error('user creation failed');
   }
 };
 

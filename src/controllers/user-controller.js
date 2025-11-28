@@ -1,4 +1,3 @@
-import {validationResult} from 'express-validator';
 import {
   selectAllUsers,
   selectUserById,
@@ -28,29 +27,6 @@ const getUserById = async (req, res, next) => {
     }
 
     res.json(user);
-  } catch (err) {
-    next(err);
-  }
-};
-
-// käyttäjän lisäys (rekisteröinti)
-const addUser = async (req, res, next) => {
-  try {
-    // validate request
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const error = new Error('Invalid or missing fields');
-      error.status = 400;
-      return next(error);
-    }
-
-    // TODO: add password hashing
-    const newUserId = await addUser(req.body);
-
-    res.json({
-      message: 'new user added',
-      user_id: newUserId,
-    });
   } catch (err) {
     next(err);
   }
@@ -103,4 +79,4 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-export {getUsers, getUserById, addUser, editUser, deleteUser};
+export {getUsers, getUserById, editUser, deleteUser};
